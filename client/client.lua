@@ -1,6 +1,4 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+Config.InitFrameWork()
 
 local WheelAlreadyBroken = {}
 local objroue = {}
@@ -170,13 +168,13 @@ if Config.CommandFix then
                     wheelpickup = true
                     SetCurrentPedWeapon(GetPlayerPed(-1), 0xA2719263)
                     AttachEntityToEntity(v.obj, GetPlayerPed(-1), GetPedBoneIndex(GetPlayerPed(-1), 28422), 0.0, 0.0, 0.0, 135.0, 0.0, 0.0, 1, 1, 0, 0, 2, 1)
-                    ESX.ShowNotification(Config.Lang["StartFixWheel"])
+                    Config.SendNotification(Config.Lang["StartFixWheel"])
                     Citizen.Wait(5000)
                     startdistancevehiclevar = true
                     Startdistancevehicle(v.vehicule, v.obj, v.index)
                 end
             else
-                ESX.ShowNotification(Config.Lang["EnterInVehicleToFix"])
+                Config.SendNotification(Config.Lang["EnterInVehicleToFix"])
             end
         end
     end, false)
@@ -193,13 +191,13 @@ if Config.TriggerFix then
                     wheelpickup = true
                     SetCurrentPedWeapon(GetPlayerPed(-1), 0xA2719263)
                     AttachEntityToEntity(v.obj, GetPlayerPed(-1), GetPedBoneIndex(GetPlayerPed(-1), 28422), 0.0, 0.0, 0.0, 135.0, 0.0, 0.0, 1, 1, 0, 0, 2, 1)
-                    ESX.ShowNotification(Config.Lang["StartFixWheel"])
+                    Config.SendNotification(Config.Lang["StartFixWheel"])
                     Citizen.Wait(5000)
                     startdistancevehiclevar = true
                     Startdistancevehicle(v.vehicule, v.obj, v.index)
                 end
             else
-                ESX.ShowNotification(Config.Lang["EnterInVehicleToFix"])
+                Config.SendNotification(Config.Lang["EnterInVehicleToFix"])
             end
         end
     end)
@@ -255,24 +253,23 @@ function Startdistancevehicle(vehicule, obj, index)
                         Citizen.SetTimeout(5000, function()
                             sendtoserver = false
                         end)
-                        ESX.Game.SpawnVehicle('baller', vehiclecoords, vehicleheading, function(phantomveh)
-                            FreezeEntityPosition(phantomveh, true)
-                            SetEntityCollision(phantomveh, false, false)
-                            SetEntityVisible(phantomveh, false, false)
-                            for k, v in pairs(RouePos) do
-                                if k == index then
-                                    local roueposition = GetWorldPositionOfEntityBone(phantomveh, GetEntityBoneIndexByName(phantomveh, v.bone))
-                                    TaskStartScenarioInPlace(GetPlayerPed(-1), "CODE_HUMAN_MEDIC_KNEEL", 0, true)
-                                    Citizen.Wait(Config.TimeToAttachWheel)
-                                    ClearPedTasksImmediately(GetPlayerPed(-1))
-                                    if not sendtoserver then
-                                        sendtoserver = true
-                                        TriggerServerEvent('az_wheel:updatewheel', VehToNet(vehicule), index, GetVehicleWheelXOffset(phantomveh, index), ObjToNet(obj))
-                                    end
-                                    DeleteEntity(phantomveh)
+                        local phantomveh = CreateVehicle(GetHashKey("baller"), vehiclecoords, vehicleheading, false, false)
+                        FreezeEntityPosition(phantomveh, true)
+                        SetEntityCollision(phantomveh, false, false)
+                        SetEntityVisible(phantomveh, false, false)
+                        for k, v in pairs(RouePos) do
+                            if k == index then
+                                local roueposition = GetWorldPositionOfEntityBone(phantomveh, GetEntityBoneIndexByName(phantomveh, v.bone))
+                                TaskStartScenarioInPlace(GetPlayerPed(-1), "CODE_HUMAN_MEDIC_KNEEL", 0, true)
+                                Citizen.Wait(Config.TimeToAttachWheel)
+                                ClearPedTasksImmediately(GetPlayerPed(-1))
+                                if not sendtoserver then
+                                    sendtoserver = true
+                                    TriggerServerEvent('az_wheel:updatewheel', VehToNet(vehicule), index, GetVehicleWheelXOffset(phantomveh, index), ObjToNet(obj))
                                 end
+                                DeleteEntity(phantomveh)
                             end
-                        end)
+                        end
                         Citizen.SetTimeout(2500, function()
                             wheelpickup = false
                             if index == 0 then
@@ -295,7 +292,7 @@ function Startdistancevehicle(vehicule, obj, index)
                         end)
                         startdistancevehiclevar = false
                     else
-                        ESX.ShowNotification(Config.Lang["PlayerInVeh"])
+                        Config.SendNotification(Config.Lang["PlayerInVeh"])
                     end
                 end
             end

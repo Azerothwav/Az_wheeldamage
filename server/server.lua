@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 RegisterNetEvent('az_wheel:updatewheel')
 AddEventHandler('az_wheel:updatewheel', function(veh, index, offset, obj)
     TriggerClientEvent('az_wheel:updatewheelclient', -1, veh, index, offset, obj)
