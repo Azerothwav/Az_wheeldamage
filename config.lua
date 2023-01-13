@@ -1,6 +1,6 @@
 Config = {}
 
-Config.FrameWork = "ESX"
+Config.FrameWork = "ESX" -- ESX / QBCore / custom
 
 Config.TriggerFix = false
 Config.CommandFix = true
