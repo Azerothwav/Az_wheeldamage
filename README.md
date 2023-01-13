@@ -32,3 +32,6 @@ The limitations of GTA make that the motorcycle wheels are not detachable, so th
 
 ## Framework 
 **QBCore / ESX / Standalone / Custom**
+
+# Preview
+https://www.youtube.com/watch?v=TYFLSRikyyA&t=1s
